@@ -19,11 +19,11 @@ Projects 안에서 프로젝트 단위로 issue 단위로 확인할 예정입니
 | 이름   | Github Username | ... |
 |--------|-----|-----|
 | 이상열 |syleeie2310||
-|  |||
-|  |||
-|  |||
-|  |||
-|  |||
+| 윤진섭|Datajs1||
+| 강성운|seongun-kang||
+| 김혜련|gom-jung||
+| 이지은|jjjjjeeeeew||
+| 이채현|chae010||
 
 - - -
 
