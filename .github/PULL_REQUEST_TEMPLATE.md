@@ -17,8 +17,9 @@ Reviewer 를 위해 아래의 본문 내용을 작성해주세요
 - [ ] 중복된 코드는 아닌지?
 - [ ] 네이밍은 적절한지?
 - [ ] 테스트는 충분하게 수행되었는지?
-- [ ] 해당 jira 이슈와 동떨어진 변경사항이 있진 않는지?
+- [ ] 해당 이슈와 동떨어진 변경사항이 있진 않는지?
 
 ### Reviewer 와 Reviewee 의 효율적인 협업을 위한 가이드
 - 효율적인 협업을 위해 아래의 git 정책 문서 및 PR 가이드 문서를 숙지해주세요!
-- https://github.com/da-analysis/asac_5_dataanalysis/blob/syleeie-1/PR_Guide.md
+- https://github.com/da-analysis/asac_6_dataanalysis/blob/main/PR_Guide.md
+
