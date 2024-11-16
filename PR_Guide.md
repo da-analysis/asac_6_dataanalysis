@@ -70,8 +70,8 @@
 
 - 커밋 예제
 
-ex, [1][ADD] 데이터브릭스 가이드 문서 작성
--  [ISSUE-ID][커밋 태그] 내용 (Issue 번호)
+ex, [#1][ADD] 데이터브릭스 가이드 문서 작성
+-  [#ISSUE-ID][커밋 태그] 내용 (Issue 번호)
 - 커밋 태그 : Add, Fix, Change, Improve, Migrate 중 하나로 업로드 합니다.
 - Add : 주요 작업이 무언가를 추가한 것일 때
 - Fix : 주요 작업이 무언가를 고친 것일 때
