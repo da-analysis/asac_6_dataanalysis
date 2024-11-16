@@ -39,5 +39,4 @@ Git 정책 가이드
 
 - - -
 ### Contributors
-*syleeie*,*chae010*
-
+*syleeie*, *suk*, *jjjjjeeeeew*, *Datajs1*, *chae010*
