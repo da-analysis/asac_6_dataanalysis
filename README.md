@@ -39,5 +39,4 @@ Git 정책 가이드
 
 - - -
 ### Contributors
-*syleeie*, *jjjjjeeeeew*
-
+*syleeie*, *suk*, *jjjjjeeeeew*
