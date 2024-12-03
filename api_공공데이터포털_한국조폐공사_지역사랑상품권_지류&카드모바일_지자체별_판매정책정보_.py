@@ -34,7 +34,7 @@ spark = SparkSession.builder \
 # API 정보
 url = "http://apis.data.go.kr/B190001/salesPolicy/paper"
 service_key = dbutils.secrets.get(scope="asac_6", key="datago")
-catalog_table = "bronze.api_public.komsco_salesPolicy_paper"
+catalog_table = "bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`"
 
 params = {
     'serviceKey': service_key,
@@ -175,7 +175,7 @@ spark = SparkSession.builder \
 # API 정보
 url = "http://apis.data.go.kr/B190001/salesPolicy/cardMobile"
 service_key = dbutils.secrets.get(scope="asac_6", key="datago")
-catalog_table = "bronze.api_public.komsco_salesPolicy_cardMobile"
+catalog_table = "bronze.api_public.`한국조폐공사_지역사랑상품권_카드모바일_지자체별_판매정책정보_전국`"
 
 params = {
     'serviceKey': service_key,
@@ -293,7 +293,7 @@ if all_data:
 
 # MAGIC %sql
 # MAGIC SELECT *
-# MAGIC FROM bronze.api_public.komsco_salesPolicy_paper
+# MAGIC FROM bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ORDER BY id DESC;
 
 # COMMAND ----------
@@ -301,7 +301,7 @@ if all_data:
 # MAGIC %sql
 # MAGIC SELECT COUNT(*)
 # MAGIC FROM(
-# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.komsco_salesPolicy_paper
+# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ORDER BY id);
 
 # COMMAND ----------
@@ -313,7 +313,7 @@ if all_data:
 
 # MAGIC %sql
 # MAGIC SELECT *
-# MAGIC FROM bronze.api_public.komsco_salesPolicy_cardMobile
+# MAGIC FROM bronze.api_public.`한국조폐공사_지역사랑상품권_카드모바일_지자체별_판매정책정보_전국`
 # MAGIC ORDER BY id DESC;
 
 # COMMAND ----------
@@ -321,7 +321,7 @@ if all_data:
 # MAGIC %sql
 # MAGIC SELECT COUNT(*)
 # MAGIC FROM(
-# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.komsco_salesPolicy_cardMobile
+# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.`한국조폐공사_지역사랑상품권_카드모바일_지자체별_판매정책정보_전국`
 # MAGIC ORDER BY id);
 
 # COMMAND ----------
@@ -332,46 +332,46 @@ if all_data:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN expt_plcy_yn COMMENT '예외정책여부(Y/N)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN pvsn_inst_cd COMMENT '제공기관코드(운영대행사 코드)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN crtr_ymd COMMENT '데이터 기준일자';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN usage_rgn_cd COMMENT '사용처지역코드(숫자5자리)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN dscnt_plcy_aplcn_bgng_ymd COMMENT '할인정책적용시작일자';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN dscnt_plcy_aplcn_end_ymd COMMENT '할인정책적용종료일자';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN dscnt_rt COMMENT '할인율';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN dy_prchs_lmt_amt COMMENT '일간구매제한금액';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN mm_prchs_lmt_amt COMMENT '월간구매제한금액';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN yr_prchs_lmt_amt COMMENT '연간구매제한금액';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN max_excng_lmt_amt COMMENT '최대환전제한금액';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN max_dscnt_lmt_amt COMMENT '최대할인제한금액';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN corp_smpl_prchs_yn COMMENT '법인단순구매가능여부(Y/N)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN corp_dscnt_prchs_yn COMMENT '법인할인구매가능여부(Y/N)';
 # MAGIC
 
@@ -383,17 +383,17 @@ if all_data:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_cardMobile
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_카드모바일_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN mm_prchs_lmt_amt COMMENT '월간구매제한금액';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_cardMobile
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_카드모바일_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN pvsn_inst_cd COMMENT '제공기관코드(운영대행사 코드)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_cardMobile
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_카드모바일_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN crtr_ymd COMMENT '데이터 기준일자';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_cardMobile
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_카드모바일_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN usage_rgn_cd COMMENT '사용처지역코드(숫자5자리)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_salesPolicy_cardMobile
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_카드모바일_지자체별_판매정책정보_전국`
 # MAGIC ALTER COLUMN dscnt_rt COMMENT '할인율';

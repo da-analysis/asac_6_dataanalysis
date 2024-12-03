@@ -32,9 +32,9 @@ spark = SparkSession.builder \
     .getOrCreate()
 
 # API 정보
-url = "http://apis.data.go.kr/B190001/paperExchange/exchange"
+url = "http://apis.data.go.kr/B190001/paperExchange/v2/exchangeV2"
 service_key = dbutils.secrets.get(scope="asac_6", key="datago")
-catalog_table = "bronze.api_public.komsco_exchange_paper"
+catalog_table = "bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`"
 
 params = {
     'serviceKey': service_key,
@@ -161,7 +161,7 @@ if all_data:
 
 # MAGIC %sql
 # MAGIC SELECT *
-# MAGIC FROM bronze.api_public.komsco_exchange_paper
+# MAGIC FROM bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ORDER BY id DESC;
 
 # COMMAND ----------
@@ -169,7 +169,7 @@ if all_data:
 # MAGIC %sql
 # MAGIC SELECT COUNT(*)
 # MAGIC FROM(
-# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.komsco_exchange_paper
+# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ORDER BY id);
 
 # COMMAND ----------
@@ -180,41 +180,41 @@ if all_data:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN pvsn_inst_cd COMMENT '제공기관코드(운영대행사 코드)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN crtr_ymd COMMENT '데이터 기준일자';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN emd_cd COMMENT '읍면동코드(숫자8자리)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN emd_nm COMMENT '읍면동명';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN brnch_id COMMENT '지점구분ID';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN brnch_nm COMMENT '지점명';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN brnch_addr COMMENT '지점주소';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN brnch_daddr COMMENT '지점상세주소';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN brnch_rprs_telno COMMENT '지점대표전화번호(- 제외 숫자로만 구성)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN gt_nm COMMENT '상품권명';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN excng_yn COMMENT '환전여부(Y/N)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN lat COMMENT '지점주소에 해당하는 위도값';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_exchange_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_환전지점정보_전국`
 # MAGIC ALTER COLUMN lot COMMENT '지점주소에 해당하는 경도값';

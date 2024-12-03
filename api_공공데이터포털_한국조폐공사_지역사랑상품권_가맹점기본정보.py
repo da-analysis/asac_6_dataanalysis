@@ -34,7 +34,7 @@ spark = SparkSession.builder \
 # API 정보
 url = "http://apis.data.go.kr/B190001/localFranchisesV2/franchiseV2"
 service_key = dbutils.secrets.get(scope="asac_6", key="datago")
-catalog_table = "bronze.api_public.komsco_franchise"
+catalog_table = "bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`"
 
 params = {
     'serviceKey': service_key,
@@ -176,7 +176,7 @@ if all_data:
 
 # MAGIC %sql
 # MAGIC SELECT *
-# MAGIC FROM bronze.api_public.komsco_franchise
+# MAGIC FROM bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ORDER BY id DESC;
 
 # COMMAND ----------
@@ -184,7 +184,7 @@ if all_data:
 # MAGIC %sql
 # MAGIC SELECT COUNT(*)
 # MAGIC FROM(
-# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.komsco_franchise
+# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ORDER BY id);
 
 # COMMAND ----------
@@ -195,87 +195,87 @@ if all_data:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN bk_awa_perf_hd_yn COMMENT '도서 및 공연 취급여부';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN onl_dlvy_ent_use_yn COMMENT '온라인 배달업체 사용여부';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN pos_use_yn COMMENT 'POS 사용여부';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN ppr_frcs_aply_yn COMMENT '지류가맹점 신청여부';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN bzmn_stts COMMENT '사업자상태코드 (사업자 상태, 01: 계속사업자 02: 휴업자 03: 폐업자)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN bzmn_stts_nm COMMENT '사업자상태코드명';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN ksic_cd COMMENT '표준산업분류코드';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN ksic_cd_nm COMMENT '표준산업분류코드명';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN qr_reg_conm COMMENT 'QR 등록 상호명';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN te_gds_hd_yn COMMENT '면세상품취급여부';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN pvsn_inst_cd COMMENT '제공기관코드(운영대행사 코드)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN crtr_ymd COMMENT '제공기관 가맹점 정보 생성, 변경, 해지 일자';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN alt_text COMMENT '개방용으로 생성되는 가맹점 구분값';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN brno COMMENT '사업자등록번호';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN frcs_reg_se COMMENT '01: 신규 02: 변경 03: 해지';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN frcs_reg_se_nm COMMENT '코드에 해당하는 명칭: 신규, 변경, 해제';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN frcs_nm COMMENT '가맹점명';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN frcs_stlm_info_se COMMENT '가맹점 결제유형 구분(01: 카드, 02: 모바일, 03: 지류)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN frcs_stlm_info_se_nm COMMENT '가맹점 결제유형 구분에 해당하는 명칭: 카드, 모바일, 지류';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN frcs_rprs_telno COMMENT '가맹점대표전화번호(- 제외 숫자로만 구성)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN usage_rgn_cd COMMENT '사용처지역코드(숫자 5자리)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN frcs_zip COMMENT '가맹점우편번호(- 없는 연속된 숫자)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN frcs_addr COMMENT '가맹점주소';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN frcs_dtl_addr COMMENT '가맹점상세주소';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN lat COMMENT '위도(가맹점주소에 해당하는 위도값)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN lot COMMENT '경도(가맹점주소에 해당하는 경도값)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN emd_cd COMMENT '읍면동코드';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_franchise
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_가맹점기본정보_전국`
 # MAGIC ALTER COLUMN emd_nm COMMENT '읍면동명';
 # MAGIC

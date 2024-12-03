@@ -34,7 +34,7 @@ spark = SparkSession.builder \
 # API 정보
 url = "http://apis.data.go.kr/B190001/localGiftsPaymentV3/paymentsV3"
 service_key = dbutils.secrets.get(scope="asac_6", key="datago")
-catalog_table = "bronze.api_public.komsco_payment"
+catalog_table = "bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`"
 
 params = {
     'serviceKey': service_key,
@@ -159,7 +159,7 @@ if all_data:
 
 # MAGIC %sql
 # MAGIC SELECT *
-# MAGIC FROM bronze.api_public.komsco_payment
+# MAGIC FROM bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ORDER BY id DESC;
 
 # COMMAND ----------
@@ -167,7 +167,7 @@ if all_data:
 # MAGIC %sql
 # MAGIC SELECT COUNT(*)
 # MAGIC FROM(
-# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.komsco_payment
+# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ORDER BY id);
 
 # COMMAND ----------
@@ -178,36 +178,36 @@ if all_data:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN crtr_ym COMMENT '기준연월';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN usage_rgn_cd COMMENT '사용처지역코드';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN par_gend COMMENT '결제자성별(M: 남성 F: 여성)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN par_ag COMMENT '결제자연령대(01: ~19세 02: 20~29세 03: 30~39세 ...)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN stlm_nocs COMMENT '결제건수(취소내역을 반영한 월간결제건수)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN stlm_amt COMMENT '결제금액(취소 내역을 반영한 월간결제금액)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN card_use_amt COMMENT '카드사용금액';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN mbl_user_cnt COMMENT '휴대이용자수(실제 결제를 한번이라도 진행한 사용자 수)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN mbl_use_amt COMMENT '휴대사용금액';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN emd_cd COMMENT '읍면동코드';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_payment
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_결제정보_전국`
 # MAGIC ALTER COLUMN emd_nm COMMENT '읍면동명';
 # MAGIC

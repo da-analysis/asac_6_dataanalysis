@@ -34,7 +34,7 @@ spark = SparkSession.builder \
 # API 정보
 url = "http://apis.data.go.kr/B190001/localGiftsOperateV2/operationsV2"
 service_key = dbutils.secrets.get(scope="asac_6", key="datago")
-catalog_table = "bronze.api_public.komsco_operation"
+catalog_table = "bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`"
 
 params = {
     'serviceKey': service_key,
@@ -149,16 +149,6 @@ if all_data:
 
 # COMMAND ----------
 
-# API 호출 확인
-# import requests
-
-# url = 'http://apis.data.go.kr/B190001/localGiftsOperateV2/operationsV2'
-
-# response = requests.get(url, params=params)
-# print(response.text)
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC 3. 데이터 확인
 
@@ -166,7 +156,7 @@ if all_data:
 
 # MAGIC %sql
 # MAGIC SELECT *
-# MAGIC FROM bronze.api_public.komsco_operation
+# MAGIC FROM bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ORDER BY id DESC;
 
 # COMMAND ----------
@@ -174,7 +164,7 @@ if all_data:
 # MAGIC %sql
 # MAGIC SELECT COUNT(*)
 # MAGIC FROM(
-# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.komsco_operation
+# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ORDER BY id);
 
 # COMMAND ----------
@@ -185,28 +175,28 @@ if all_data:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC ALTER TABLE bronze.api_public.komsco_operation
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ALTER COLUMN PVSN_INST_CD COMMENT '제공기관코드';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_operation
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ALTER COLUMN CRTR_YM COMMENT '기준연월';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_operation
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ALTER COLUMN USAGE_RGN_CD COMMENT '사용처지역코드';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_operation
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ALTER COLUMN CARD_PBLCN_QTY COMMENT '카드발행수량';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_operation
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ALTER COLUMN MBL_JOINER_CNT COMMENT '휴대가입자수';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_operation
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ALTER COLUMN MBL_CHG_AMT COMMENT '휴대충전금액';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_operation
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ALTER COLUMN PPR_NTSL_AMT COMMENT '지류판매액(은행에서 고객에게 판매한 금액, 고객이 상품권을 구매한 기준)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_operation
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_운영정보_전국`
 # MAGIC ALTER COLUMN PPR_RTRVL_AMT COMMENT '지류회수액(가맹점에서 은행에 환전 요청이 들어온 금액, 가맹점 기준)';
 # MAGIC
 # MAGIC

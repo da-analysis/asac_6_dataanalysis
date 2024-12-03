@@ -34,7 +34,7 @@ spark = SparkSession.builder \
 # API 정보
 url = "http://apis.data.go.kr/B190001/paperStock/v2/stockV2"
 service_key = dbutils.secrets.get(scope="asac_6", key="datago")
-catalog_table = "bronze.api_public.komsco_stock_paper"
+catalog_table = "bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`"
 
 params = {
     'serviceKey': service_key,
@@ -158,7 +158,7 @@ if all_data:
 
 # MAGIC %sql
 # MAGIC SELECT *
-# MAGIC FROM bronze.api_public.komsco_stock_paper
+# MAGIC FROM bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ORDER BY id DESC;
 
 # COMMAND ----------
@@ -166,7 +166,7 @@ if all_data:
 # MAGIC %sql
 # MAGIC SELECT COUNT(*)
 # MAGIC FROM(
-# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.komsco_stock_paper
+# MAGIC SELECT DISTINCT(*) FROM bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ORDER BY id);
 
 # COMMAND ----------
@@ -177,33 +177,33 @@ if all_data:
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN pvsn_inst_cd COMMENT '제공기관코드(운영대행사 코드)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN crtr_ymd COMMENT '데이터 기준일자';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN emd_cd COMMENT '읍면동코드(숫자8자리)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN emd_nm COMMENT '읍면동명';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN brnch_id COMMENT '지점구분ID';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN brnch_nm COMMENT '지점명';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN gt_type_dnmn COMMENT '상품권종액면가';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN gt_type_stc_qty COMMENT '상품권재고여부(0:없음, 1:있음)';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN usage_rgn_cd COMMENT '사용처지역코드';
 # MAGIC
-# MAGIC ALTER TABLE bronze.api_public.komsco_stock_paper
+# MAGIC ALTER TABLE bronze.api_public.`한국조폐공사_지역사랑상품권_지류_지점별_재고정보_전국`
 # MAGIC ALTER COLUMN usage_rgn_nm COMMENT '사용처지역명';
 # MAGIC
