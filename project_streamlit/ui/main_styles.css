@@ -1,0 +1,21 @@
+   div[data-testid="stVerticalBlock"] > div:nth-child(2) {
+        display: None;
+    }
+   div[data-testid="stVerticalBlock"] > div:nth-child(3) {
+        display: None;
+    }
+   div[data-testid="stVerticalBlock"] > div:nth-child(4) {
+        display: None;
+    }    
+   div[data-testid="stVerticalBlock"] > div:nth-child(5) {
+        display: None;
+    }  
+   div[data-testid="stVerticalBlock"] > div:nth-child(8) {
+        background-color: rgba(240, 242, 246, 1);
+	border-radius: 10px;
+	padding: 20px;
+	max-width: 100%;
+    }
+   .st-emotion-cache-1tquei4 h3 {
+	font-size: 1.65rem;
+    }
