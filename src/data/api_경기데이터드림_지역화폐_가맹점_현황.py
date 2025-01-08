@@ -47,34 +47,6 @@ def initialize_delta_table():
         empty_df.write.format("delta").mode("overwrite").saveAsTable(catalog_table)
         print(f"Delta 테이블 '{catalog_table}' 생성 완료.")
 
-# 마지막 ID 가져오기
-def get_last_id():
-    try:
-        existing_data = spark.table(catalog_table)
-        if existing_data.count() == 0:
-            return 0  # Delta 테이블이 비어 있으면 0부터 시작
-        last_id = existing_data.agg({"id": "max"}).collect()[0][0]
-        return int(last_id)
-    except Exception as e:
-        print(f"Delta 테이블에서 마지막 ID를 가져오는 데 실패: {e}")
-        return 0
-
-# 이미 처리된 페이지 확인
-def get_processed_pages():
-    try:
-        existing_data = spark.table(catalog_table)
-        processed_pages = (
-            existing_data
-            .select("pageNo")
-            .distinct()
-            .toPandas()["pageNo"]
-            .tolist()
-        )
-        return set(processed_pages)
-    except Exception as e:
-        print(f"Delta 테이블에서 처리된 페이지 정보를 가져오는 데 실패: {e}")
-        return set()
-
 # 데이터 저장
 def save_to_delta(data, page):
     if data:
@@ -83,14 +55,32 @@ def save_to_delta(data, page):
         df.write.format("delta").mode("append").saveAsTable(catalog_table)
         print(f"Delta 테이블에 저장 완료: {len(data)}개 데이터 저장됨. (Page: {page})")
 
+# 중복 제거 함수
+def remove_duplicates():
+    try:
+        # Delta 테이블 불러오기
+        df = spark.table(catalog_table)
+        
+        # 중복 제거 기준 컬럼
+        dedup_columns = [
+            "SIGUN_NM", "CMPNM_NM", "INDUTYPE_NM",
+            "REFINE_ROADNM_ADDR", "REFINE_LOTNO_ADDR", "REFINE_ZIPNO",
+            "REFINE_WGS84_LAT", "REFINE_WGS84_LOGT", "BIZREGNO",
+            "INDUTYPE_CD", "FRCS_NO", "LEAD_TAX_MAN_STATE",
+            "LEAD_TAX_MAN_STATE_CD", "CLSBIZ_DAY"
+        ]
+        
+        # 중복 제거
+        deduplicated_df = df.dropDuplicates(dedup_columns)
+        
+        # Delta 테이블 업데이트
+        deduplicated_df.write.format("delta").mode("overwrite").saveAsTable(catalog_table)
+        print(f"[INFO] 중복 제거 완료: {deduplicated_df.count()}개 데이터가 남았습니다.")
+    except Exception as e:
+        print(f"[ERROR] 중복 제거 중 오류 발생: {e}")
+
 # Delta 테이블 초기화
 initialize_delta_table()
-
-# Delta 테이블에서 기존 정보 로드
-processed_pages = get_processed_pages()
-last_id = get_last_id()
-page = max(processed_pages) + 1 if processed_pages else 1
-current_id = last_id  # 기존 데이터 누적 ID
 
 # API 키 설정
 api_key = dbutils.secrets.get(scope="asac_6", key="datagggo")  # 인증키
@@ -99,13 +89,15 @@ api_key = dbutils.secrets.get(scope="asac_6", key="datagggo")  # 인증키
 params = {
     'KEY': api_key,
     'Type': 'json',
-    'pIndex': page,
+    'pIndex': 1,  # 항상 처음부터 시작
     'pSize': 100
 }
 
 # 수집 로직
 batch_size = 10
 all_data = []
+current_id = 0
+page = 1
 
 while True:
     params['pIndex'] = page
@@ -117,12 +109,11 @@ while True:
             response.raise_for_status()
 
             print(f"[DEBUG] Page {page}: URL={response.url}, Status={response.status_code}")
-            print(f"[DEBUG] Page {page}: 응답 내용={response.text[:500]}...")
-
+            
             try:
                 result = response.json()
             except ValueError:
-                print(f"[ERROR] Page {page}: JSON 파싱 실패. 응답이 JSON 형식이 아님.")
+                print(f"[ERROR] Page {page}: JSON 파싱 실패.")
                 items = []
                 break
 
@@ -132,7 +123,7 @@ while True:
                     items = result['RegionMnyFacltStus'][1]['row']
                     break
                 else:
-                    print(f"[WARNING] Page {page}: 응답 코드 {code}. 메시지: {result['RegionMnyFacltStus'][0]['head'][1]['RESULT']['MESSAGE']}")
+                    print(f"[WARNING] Page {page}: 응답 코드 {code}.")
                     items = []
                     break
             except KeyError:
@@ -166,7 +157,7 @@ while True:
             item['REFINE_WGS84_LOGT'] = None
 
     all_data.extend(items)
-    print(f"[INFO] Page {page}: {len(items)}개 데이터 수집 완료. 누적 ID: {current_id}")
+    print(f"[INFO] Page {page}: {len(items)}개 데이터 수집 완료.")
 
     if page % batch_size == 0:
         save_to_delta(all_data, page)
@@ -178,6 +169,9 @@ while True:
 if all_data:
     save_to_delta(all_data, page)
     print("[INFO] Delta 테이블에 최종 데이터 저장 완료.")
+
+# 중복 제거 후 업데이트
+remove_duplicates()
 
 
 # COMMAND ----------
