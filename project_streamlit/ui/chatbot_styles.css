@@ -1,0 +1,39 @@
+    div[data-testid="stVerticalBlock"] > div:nth-child(2) {
+        display: None;
+    }
+    div[data-testid="stVerticalBlock"] > div:nth-child(3) {
+        display: None;
+    }
+    div[data-testid="stVerticalBlock"] > div:nth-child(4) {
+        display: None;
+    }
+    div[data-testid="stVerticalBlock"] > div:nth-child(5) {
+        display: None;
+    }
+    div[data-testid="stTextInputRootElement"] {
+        height: 5rem;
+	border-bottom-color: rgba(0, 0, 0, 0);
+	border-top-color: rgba(0, 0, 0, 0);
+	border-right-color: rgba(0, 0, 0, 0);
+	border-left-color: rgba(0, 0, 0, 0);
+    }
+    .st-emotion-cache-1tquei4 h2 {
+        font-family: "Pretendard";
+    }
+   div[data-baseweb="base-input"] {
+	font-family: "Pretendard";
+	background-color: rgb(218, 231, 242);
+    }
+   div[data-baseweb="base-input"] input {
+	font-family: "Pretendard";
+    }
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+	transition: background-color 5000s ease-in-out 0s;
+        -webkit-transition: background-color 9999s ease-out;
+        -webkit-box-shadow: 0 0 0px 1000px rgb(218, 231, 242) inset !important;
+    }
+
+
