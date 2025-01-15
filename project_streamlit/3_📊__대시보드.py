@@ -44,7 +44,7 @@ selected_sidebar = st.sidebar.radio('', dashboard_options)
 if selected_sidebar == "전국":
     st.subheader('KPI 대시보드')
     embed_dashboard("https://tacademykr-dataanalysis.cloud.databricks.com/embed/dashboardsv3/01efd191d73119bf8d7a26911be42f03?o=2766527531974171",
-                   max_height=1850)
+                   max_height=1900)
     st.button("🔝", on_click=scroll)
 
 ## 대시보드
@@ -52,19 +52,19 @@ if selected_sidebar == "전국":
 if selected_sidebar == "KPI 대시보드":
     st.subheader('KPI 대시보드')
     embed_dashboard("https://tacademykr-dataanalysis.cloud.databricks.com/embed/dashboardsv3/01efd191d73119bf8d7a26911be42f03?o=2766527531974171",
-                   max_height=2000)
+                   max_height=1900)
     st.button("🔝", on_click=scroll)
 
 if selected_sidebar == "전국 지역화폐 가맹점 및 결제 현황":
     st.subheader('전국 지역화폐 가맹점 및 결제 현황')
     embed_dashboard("https://tacademykr-dataanalysis.cloud.databricks.com/embed/dashboardsv3/01efc361fea51c2282bb6cd9fa5b3cc4?o=2766527531974171",
-                   max_height=3550)
+                   max_height=3700)
     st.button("🔝", on_click=scroll)
 
 if selected_sidebar == "설문통계자료":
     st.subheader('설문통계자료')
     embed_dashboard("https://tacademykr-dataanalysis.cloud.databricks.com/embed/dashboardsv3/01efbd13c0361cb1ad26794454fb92c2?o=2766527531974171",
-                   max_height=1800)
+                   max_height=1900)
     st.button("🔝", on_click=scroll)
 
 
@@ -113,24 +113,24 @@ if selected_sidebar == "부산시 지역화폐 결제 현황":
 if selected_sidebar == "전라북도 무주군 지역화폐 결제 현황":
     st.subheader('전라북도 무주군 지역화폐 결제 현황')
     embed_dashboard("https://tacademykr-dataanalysis.cloud.databricks.com/embed/dashboardsv3/01efc42541b31ad0a3f0293b27b86f53?o=2766527531974171",
-                   max_height=3150)
+                   max_height=3300)
     st.button("🔝", on_click=scroll)
 
 if selected_sidebar == "전라북도 익산시 지역화폐 결제 현황":
     st.subheader('전라북도 익산시 지역화폐 결제 현황')
     embed_dashboard("https://tacademykr-dataanalysis.cloud.databricks.com/embed/dashboardsv3/01efcd7c62601b51a8cf887323acf7c2?o=2766527531974171",
-                    max_height=2250)
+                    max_height=2500)
     st.button("🔝", on_click=scroll)
 
 if selected_sidebar == "충청북도 옥천군 지역화폐 결제 현황":
     st.subheader('충청북도 옥천군 지역화폐 결제 현황')
     embed_dashboard("https://tacademykr-dataanalysis.cloud.databricks.com/embed/dashboardsv3/01efcd7c6fd81967a4637705711893eb?o=2766527531974171",
-                   max_height=2250)
+                   max_height=2400)
     st.button("🔝", on_click=scroll)
 
 if selected_sidebar == "경상남도 김해시 지역화폐 결제 현황":
     st.subheader('경상남도 김해시 지역화폐 결제 현황')
     embed_dashboard("https://tacademykr-dataanalysis.cloud.databricks.com/embed/dashboardsv3/01efcd7c68c3133781ceddb831403e73?o=2766527531974171",
-                   max_height=2000)
+                   max_height=2200)
     st.button("🔝", on_click=scroll)
 
