@@ -1,8 +1,11 @@
 streamlit==1.41.1
 streamlit_folium==0.24.0
+streamlit-scroll-to-top
 folium==0.19.3
 geopandas==1.0.1
 databricks-sql-connector==3.6.0
 chromadb==0.5.3
 vannaai==0.7.5
 pillow
+openai
+scikit-learn

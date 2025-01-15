@@ -16,3 +16,5 @@ vanna 버전 호환을 위해서는 VS Build Tools C++ 설치 반드시 필요
 
 # app.py 정보가 Streamlit 웹페이지에 실시간 반영
 # 각 페이지별 파일들은 독립적으로 구성, app.py 아래서 한꺼번에 실행됨
+
+written by gom-jung
