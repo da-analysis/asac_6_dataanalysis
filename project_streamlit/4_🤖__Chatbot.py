@@ -53,35 +53,39 @@ model_manager = initialize_model_manager()
 # 질문 처리 및 결과 출력
 if st.button("질문 실행") or user_question:
     if user_question.strip():
-        with st.spinner("답변을 생성중입니다..."):
-            max_retries = 3
-            success = False
-            generated_sql = None
-            df_result = None
+        if user_question.strip().lower() in ["만든사람", "제작자", "참여자", "맴버", "맴바"]:
+            st.subheader("🎉 이스터에그 발견!")
+            st.write("맴버 : 원주 아이유, 고양 박보검, 성북구 장첸, 목동 농담곰, 건대 보더콜리")
+        else:
+            with st.spinner("답변을 생성중입니다..."):
+                max_retries = 3
+                success = False
+                generated_sql = None
+                df_result = None
 
-            for attempt in range(1, max_retries + 1):
-                try:
-                    # 학습된 질문 확인 및 프롬프트 구성
-                    if attempt == 1:
-                        prompt = f"{user_question}"
-                    else:
-                        prompt = f"{user_question} 잘못된 쿼리문이야. 제공된 테이블과 컬럼 정보를 활용해 쿼리문을 새롭게 정확히 만들어줘."
+                for attempt in range(1, max_retries + 1):
+                    try:
+                        # 학습된 질문 확인 및 프롬프트 구성
+                        if attempt == 1:
+                            prompt = f"{user_question}"
+                        else:
+                            prompt = f"{user_question} 잘못된 쿼리문이야. 제공된 테이블과 컬럼 정보를 활용해 쿼리문을 새롭게 정확히 만들어줘."
 
-                    # 질문 실행
-                    generated_sql, df_result = model_manager.ask_question(user_question=user_question)
-                    success = True
-                    break  # 성공 시 루프 종료
-                except Exception as e:
-                    logging.error(f"시도 {attempt}번째에 오류가 발생했습니다: {e}")
-                    time.sleep(0.3)  # 재시도 간 대기
+                        # 질문 실행
+                        generated_sql, df_result = model_manager.ask_question(user_question=user_question)
+                        success = True
+                        break  # 성공 시 루프 종료
+                    except Exception as e:
+                        logging.error(f"시도 {attempt}번째에 오류가 발생했습니다: {e}")
+                        time.sleep(0.3)  # 재시도 간 대기
 
-            if success:
-                st.write("생성된 SQL 쿼리:")
-                st.code(generated_sql)
+                if success:
+                    st.write("생성된 SQL 쿼리:")
+                    st.code(generated_sql)
 
-                st.write("쿼리 실행 결과:")
-                st.dataframe(df_result)
-            else:
-                st.error("SQL 쿼리 생성에 실패했습니다. 입력을 확인하거나 다시 시도해주세요.")
+                    st.write("쿼리 실행 결과:")
+                    st.dataframe(df_result)
+                else:
+                    st.error("SQL 쿼리 생성에 실패했습니다. 입력을 확인하거나 다시 시도해주세요.")
     else:
         st.warning("질문을 입력해주세요.")
