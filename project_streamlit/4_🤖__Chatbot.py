@@ -39,13 +39,31 @@ def initialize_model_manager():
     return st.session_state.model_manager
 
 
-# Streamlit 인터페이스
+# Streamlit UI
 st.header("🤖 Text-to-SQL Chatbot")
 st.write("질문을 입력하면, 데이터베이스에서 관련 데이터를 가져옵니다.")
 
 st.divider()
-st.write("질문을 입력하세요:")
-user_question = st.text_input('', placeholder="예: 서울시에 등록된 지역화폐 가맹점 수는?",label_visibility="collapsed")
+
+# 질문 리스트 정의
+question_list = [
+    "경기도에서 음식점 업종의 가맹점 수는?",
+    "2024년에 강원도에서 제공되는 카드 및 모바일 지역화폐 할인율 상위 3개 지역을 알려줘.",
+    "제주도와 충청도의 폐업하지 않은 매장 중 지류 결제 가능 매장의 수를 비교해줘.",
+    "서울에서 2022년 동안 남성 결제 금액이 가장 높은 연령대는?",
+    "2020년 경상도에서 카드 결제 금액이 가장 높은 읍면동은?",
+    "2022년 대전에서 판매된 지류 지역화폐의 금액은?",
+    "2023년에 전라도에서 60세 이상 결제 금액이 가장 높은 지역은?"
+]
+
+# 질문 리스트 출력
+st.markdown("**📋 질문 예시**")
+with st.container(border=True):
+    clicked_question = st.radio("질문을 선택하세요:", question_list, index=None, label_visibility="collapsed")
+
+# 직접 입력 필드
+st.write("질문을 직접 입력하거나 질문 예시를 선택하세요:")
+user_question = st.text_input('', value=clicked_question or "", placeholder="예: 서울시에 등록된 지역화폐 가맹점 수는?", label_visibility="collapsed")
 
 # 모델 매니저 초기화
 model_manager = initialize_model_manager()
@@ -62,27 +80,27 @@ if st.button("질문 실행") or user_question:
                 success = False
                 generated_sql = None
                 df_result = None
-
+    
                 for attempt in range(1, max_retries + 1):
                     try:
-                        # 학습된 질문 확인 및 프롬프트 구성
+                        # 재시도에 따라 프롬프트 변경
                         if attempt == 1:
-                            prompt = f"{user_question}"
+                            prompt = user_question
                         else:
                             prompt = f"{user_question} 잘못된 쿼리문이야. 제공된 테이블과 컬럼 정보를 활용해 쿼리문을 새롭게 정확히 만들어줘."
-
+    
                         # 질문 실행
-                        generated_sql, df_result = model_manager.ask_question(user_question=user_question)
+                        generated_sql, df_result = model_manager.ask_question(user_question=prompt)
                         success = True
                         break  # 성공 시 루프 종료
                     except Exception as e:
                         logging.error(f"시도 {attempt}번째에 오류가 발생했습니다: {e}")
                         time.sleep(0.3)  # 재시도 간 대기
-
+    
                 if success:
                     st.write("생성된 SQL 쿼리:")
                     st.code(generated_sql)
-
+    
                     st.write("쿼리 실행 결과:")
                     st.dataframe(df_result)
                 else:
