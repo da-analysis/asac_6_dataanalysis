@@ -1,17 +1,8 @@
-    div[data-testid="stVerticalBlock"] > div:nth-child(3) {
-        display: None;
-    }  
-    div[data-testid="stVerticalBlock"] > div:nth-child(4) {
-        display: None;
-    }  
-    div[data-testid="stVerticalBlock"] > div:nth-child(5) {
-        display: None;
-    }  
+    .block-container {
+        padding-top: 2rem;
+    }
    .st-emotion-cache-1tquei4 h3 {
 	font-family: "Pretendard";
-    }
-    div[data-testid="stMainBlockContainer"] {
-        padding-top: 5rem;
     }
     span[data-baseweb="tag"] {
     	padding-left: 5px;
