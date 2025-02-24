@@ -20,6 +20,8 @@ pydantic==2.10.6
 requests==2.32.3
 PyMuPDF==1.25.3
 lark==1.2.2
+gspread
+oauth2client
 
 
 

@@ -5,9 +5,24 @@ from openai import OpenAI
 from sqlalchemy import create_engine, text
 import ssl
 import json
-from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import uuid
+import os
+
+# 설정
+config = {
+    "api_key": ""
+    "model": "gpt-4o-mini"
+}
+
+server_hostname = ""
+http_path = ""
+access_token = ""
+catalog = "gold"
+schema = "normal_chatbot"
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -30,37 +45,12 @@ class DbrxLLM(VannaBase):
         sql = sql.replace("\\_", "_")  # 백슬래시 제거
         return sql
 
-    def submit_prompt(self, user_question: str, **kwargs) -> str:
-        base_prompt = """
-        추가 응답 지침
-        1. 가맹점과 관련된 질문은 "한국조폐공사_지역사랑상품권_가맹점기본정보_전국" 테이블을 참고하되, 
-        기본적으로 한 사업체에 대해서 상태 변화에 따른 중복값이 존재하니 brno 컬럼을 기준으로 distinct 하여 결과를 출력하라.
-        1-1. 만약 가맹점과 관련된 질문이지만 특정 기간의 사업체 상태(휴업,폐업,계속사업자)에 대해서 물어볼땐 필요에따라 distinct 하지않고 쿼리문을 작성해도된다.
-        2. 지역, 사업체 상태, 지역화폐명 등 WHERE 문법을 사용해서 조건을 검색할땐 "="을 사용하지 않고 사용자가 질문한 단어를 해석해 LIKE 문법을 사용해 쿼리를 작성한다.
-        2-1. 전북, 전라북도는 전북, 전라북도, 전북특별자치도 와 같은 다양한 이름으로 되어있으니 해당 지역에 대한 질문에는 OR을 통해 여러 경우를 고려해서 쿼리를 작성한다. (전라도도 마찬가지)
-        3. 카드발행수량, 모바일 가입자수, 모바일 충전금액, 지류판매액, 지류회수액 데이터는 "한국조폐공사_지역사랑상품권_운영정보_전국" 테이블에 있다.
-        3-1. 결제건수, 결제금액, 카드사용금액, 모바일 이용자수, 모바일 사용금액 데이터는 "한국조폐공사_지역사랑상품권_결제정보_전국" 테이블에 있다.
-        3-2. "판매정책정보"라는 단어가 들어간 테이블은 모두 구매제한금액이나 할인율에 대한 데이터가 담겨있다.
-        4. 사용자 질문에서 지역을 명시적으로 "시군구" 라고 하지 않으고 지역에 대한 질문을 한다면 기본적으론 "시도" 정보를 제공한다.(특정 지역끼리의 비교는 제외)
-        """
-        # user_question이 리스트로 전달된 경우 처리
-        if isinstance(user_question, list):
-            # 리스트를 문자열로 병합 (각 요소를 공백으로 구분)
-            user_question = " ".join(str(item) for item in user_question)
-
-        # user_question이 문자열인지 확인
-        if not isinstance(user_question, str):
-            raise ValueError(f"user_question은 문자열이어야 합니다. 전달된 값: {user_question}")
-        
-        # 'messages'를 올바른 배열 형태로 구성
-        messages = [
-            {"role": "system", "content": base_prompt.strip()},
-            {"role": "user", "content": user_question.strip()}
-        ]
-        print("\n[DEBUG] [submit_prompt] 최종적으로 OpenAI API에 보낼 messages:\n", messages, "\n")
+    def submit_prompt(self, user_question: str, base_prompt: str = "", **kwargs) -> str:
+        prompt = f"{base_prompt}\n{user_question}" if base_prompt else user_question
+        print("\n[DEBUG] [submit_prompt] 최종적으로 OpenAI API에 보낼 messages:\n", prompt, "\n")
         chat_response = self.client.chat.completions.create(
             model=self.model,
-            messages=messages,
+            messages=prompt,
             max_tokens=500,
             temperature=0.8
         )
@@ -69,16 +59,63 @@ class DbrxLLM(VannaBase):
 
 class MyVanna(DbrxLLM, ChromaDB_VectorStore):
     def __init__(self, config):
-        ChromaDB_VectorStore.__init__(self, config=config)  # ChromaDB_VectorStore 초기화
+        vector_store_path = os.path.join(project_root, "vector_store")  # ✅ 경로 변경 없음
+        vector_store_name = "normal_chatbot_chromadb"  # 기본 폴더명
+        full_store_path = os.path.join(vector_store_path, vector_store_name)  # 기존 경로 + 폴더 이름
+        ChromaDB_VectorStore.__init__(self, config={**config, "path": full_store_path})
         DbrxLLM.__init__(self, config=config)  # DbrxLLM 초기화
         self.allow_llm_to_see_data = True
+        self.custom_initial_prompt = None  # 사용자 지정 프롬프트 변수 추가
+
+    def set_initial_prompt(self, prompt: str):
+        """사용자가 원하는 SQL 생성 프롬프트를 설정하는 메서드"""
+        self.custom_initial_prompt = prompt
+
+    def get_sql_prompt(
+        self,
+        initial_prompt: str,
+        question: str,
+        question_sql_list: list,
+        ddl_list: list,
+        doc_list: list,
+        **kwargs,
+    ):
+        """
+        부모 클래스의 get_sql_prompt를 오버라이딩하여 Response Guidelines 부분을 제거한다.
+        """
+
+        # ✅ 사용자가 설정한 `initial_prompt` 적용
+        if self.custom_initial_prompt:
+            initial_prompt = self.custom_initial_prompt
+        elif initial_prompt is None:
+            initial_prompt = "당신은 SQL 전문가입니다. 질문에 대한 SQL 쿼리를 생성하는 데 도움을 주세요."
+
+        # ✅ DDL 및 문서 추가 (부모 메서드 활용)
+        initial_prompt = self.add_ddl_to_prompt(initial_prompt, ddl_list, max_tokens=self.max_tokens)
+
+        if self.static_documentation != "":
+            doc_list.append(self.static_documentation)
+
+        initial_prompt = self.add_documentation_to_prompt(initial_prompt, doc_list, max_tokens=self.max_tokens)
+
+        # ✅ 🚀 여기서 **Response Guidelines를 추가하지 않음!**
+        message_log = [self.system_message(initial_prompt)]
+
+        # ✅ 저장된 질문 및 SQL 추가
+        for example in question_sql_list:
+            if example and "question" in example and "sql" in example:
+                message_log.append(self.user_message(example["question"]))
+                message_log.append(self.assistant_message(example["sql"]))
+
+        # ✅ 현재 사용자 질문 추가
+        message_log.append(self.user_message(question))
+
+        return message_log
 
     def store_question_with_embedding(self, question: str, sql: str):
         try:
             # 임베딩 생성 디버깅
-            print("[DEBUG] Generating embedding for question:", question)
             question_embedding = self.generate_embedding(question)
-            print("[DEBUG] Generated embedding:", question_embedding)
 
             # 이미 리스트인지 확인
             if isinstance(question_embedding, np.ndarray):
@@ -94,72 +131,22 @@ class MyVanna(DbrxLLM, ChromaDB_VectorStore):
                 documents=[json.dumps(document)],
                 ids=[str(uuid.uuid4())]
             )
-            print("[INFO] 질문과 임베딩 저장 완료:", document)
         except Exception as e:
             print(f"[ERROR] 질문 저장 중 오류 발생: {e}")
 
 
     def get_similar_question_sql(self, question: str, top_k: int = 5) -> list:
         try:
-            print("[DEBUG] Fetching stored data from ChromaDB.")
-            stored_data = self.sql_collection.get()
-            documents = stored_data.get("documents", [])
+            print("[DEBUG] Fetching similar questions using ChromaDB_VectorStore.")
+            similar_questions = super().get_similar_question_sql(question)
 
-            if not documents:
-                print("[WARN] 저장된 질문이 없습니다.")
+            if not similar_questions:
+                print("[WARN] 유사한 질문이 없습니다.")
                 return []
 
-            # 입력 질문 임베딩 생성 디버깅
-            print("[DEBUG] Generating embedding for input question:", question)
-            question_embedding = self.generate_embedding(question)
-
-            if isinstance(question_embedding, np.ndarray):
-                question_embedding = question_embedding.tolist()
-            
-            print("[DEBUG] Input question embedding:", question_embedding)
-
-            embeddings, stored_questions, sqls = [], [], []
-
-            # 저장된 데이터 디버깅
-            for idx, doc in enumerate(documents):
-                try:
-                    doc_data = json.loads(doc)
-                    if "embedding" not in doc_data or not isinstance(doc_data["embedding"], list):
-                        print(f"[WARN] 문서 {idx + 1}에 'embedding'이 없거나 잘못된 형식입니다. 건너뜁니다.")
-                        continue
-
-                    print(f"[DEBUG] Stored document {idx + 1}:", doc_data)
-
-                    stored_questions.append(doc_data["question"])
-                    sqls.append(doc_data["sql"])
-                    embeddings.append(np.array(doc_data["embedding"]))
-                except Exception as e:
-                    print(f"[ERROR] 문서 {idx + 1} 처리 중 오류 발생: {e}")
-
-            # 임베딩 리스트로 변환
-            embeddings = np.array(embeddings)
-            print("[DEBUG] All stored embeddings shape:", embeddings.shape)
-
-            # 유사도 계산 디버깅
-            print("[DEBUG] Calculating cosine similarity.")
-            similarity_scores = cosine_similarity(
-                np.array([question_embedding]), embeddings
-            )[0]
-            print("[DEBUG] Similarity scores:", similarity_scores)
-
-            # 유사도 기준 상위 top_k 선택
-            top_indices = np.argsort(similarity_scores)[::-1][:top_k]
-            similar_questions = [
-                {
-                    "question": stored_questions[i],
-                    "sql": sqls[i],
-                    "score": similarity_scores[i],
-                }
-                for i in top_indices
-            ]
-
-            print("[INFO] 유사한 질문과 SQL 반환:", similar_questions)
-            return similar_questions
+            # 상위 5개 필터링
+            filtered_questions = similar_questions[:top_k]
+            return filtered_questions
 
         except Exception as e:
             print(f"[ERROR] get_similar_question_sql 실행 중 오류: {e}")
@@ -182,7 +169,6 @@ class VannaModelManager:
 
         # 모델 설정 및 학습
         self._setup_model()
-        self.reset_chromadb_collections()  # ChromaDB 컬렉션 초기화
         self.train_model()  # 초기화 후 학습 실행
 
     def _setup_model(self):
@@ -236,70 +222,69 @@ class VannaModelManager:
     def train_model(self):
         try:
             print("[INFO] 모델 학습을 시작합니다.")
-            # 1) silver 카탈로그, nationwide 스키마의 메타데이터
+
+            # 📌 기존 Query 유지
             query = """
             SELECT
                 *
             FROM
-                silver.information_schema.columns c
+                gold.information_schema.columns c
             WHERE
-                c.table_catalog = 'silver'
-                AND c.table_schema = 'nationwide';
+                c.table_catalog = 'gold'
+                AND c.table_schema = 'normal_chatbot';
             """
-            print(query)
             df_metadata = self.vn.run_sql(query)
-            print(df_metadata)
-            
-            print(self.vn.get_training_data())
 
-            print("[DEBUG] df_metadata shape:", df_metadata.shape)
+            # 📌 테이블 정보 정리 (table_catalog, table_schema, table_name, column_name, data_type, comment)
+            table_info_dict = {}
+            for _, row in df_metadata.iterrows():
+                table_key = f"{row['table_schema']}.`{row['table_name']}`"
+                if table_key not in table_info_dict:
+                    table_info_dict[table_key] = []
 
-            if df_metadata.shape[0] == 0:
-                print("[WARN] 메타데이터가 비어 있습니다. get_training_plan_generic()을 스킵합니다.")
-            else:
-                print("[DEBUG] Calling get_training_plan_generic() with metadata...")
-                self.vn.get_training_plan_generic(df_metadata)
-                print("[DEBUG] Done: get_training_plan_generic()")
-
-            # 2) 질문-쿼리 매핑 테이블
-            mapping_query = """
-            SELECT
-                `질문` AS question,
-                `쿼리` AS query
-            FROM silver.question_query_mapping_table.qq_mapping_table
-            """
-            print(mapping_query)
-            mapping_df = self.vn.run_sql(mapping_query)
-            print("[DEBUG] mapping_df shape:", mapping_df.shape)
-
-            if mapping_df.shape[0] == 0:
-                print("[WARN] 질문-쿼리 매핑 테이블도 비어 있습니다. 학습할 내용이 없습니다.")
-                return
-            
-            print(f"[INFO] 학습할 질문-쿼리 쌍의 총 개수: {len(mapping_df)}")
-            print(mapping_df.head())
-
-            # 질문-쿼리 학습
-            for idx, row in mapping_df.iterrows():
-                q_text = row['question']
-                sql_text = row['query']
-                print(f"\n[TRAIN] {idx+1}/{len(mapping_df)}")
-                print("[QUESTION]", repr(q_text))
-                print("[SQL]", repr(sql_text))
-
-                self.vn.train(
-                    question=q_text,
-                    sql=sql_text,
+                # 컬럼 정보 추가
+                table_info_dict[table_key].append(
+                    f"  - 컬럼: {row['column_name']} ({row['data_type']}) → {row['comment'] or '설명 없음'}"
                 )
-                self.vn.store_question_with_embedding(question=q_text, sql=sql_text)
 
-            print("[INFO] 모델 학습이 완료되었습니다.")
+            # 📌 최종적으로 GPT에 전달할 테이블 정보 문자열 생성
+            formatted_table_info = "\n".join(
+                [f"- 테이블: gold.{table_name}\n" + "\n".join(columns) for table_name, columns in table_info_dict.items()]
+            )
+
+            # 📌 기존 set_initial_prompt 코드 유지 + 테이블 정보만 추가
+            base_prompt = """
+            당신은 SQL 전문가입니다. 질문에 대한 SQL 쿼리를 생성하는 데 도움을 주세요.
+            응답은 제공된 컨텍스트에만 기반해야 하며, 응답 지침 및 형식 지침을 따라야 합니다.
+
+            === 응답 지침 ===
+            1. 제공된 컨텍스트가 충분한 경우, 질문에 대한 유효한 SQL 쿼리를 설명 없이 생성하세요.
+            2. 제공된 컨텍스트가 부족한 경우, 왜 쿼리를 생성할 수 없는지 설명하세요.
+            3. 가장 관련성이 높은 테이블을 사용하세요.
+            4. 해당 질문이 이전에 이미 답변된 적이 있다면, 동일한 답변을 그대로 반복하세요.
+            5. 출력되는 SQL이 SQL 문법을 준수하고 실행 가능하며, 문법 오류가 없도록 하세요.
+            6. 지역, 사업체 상태, 지역화폐명 등 WHERE 문법을 사용해서 조건을 검색할땐 '='을 사용하지 않고 사용자가 질문한 단어를 해석해 'LIKE' 와 '%' 문법을 사용해 쿼리를 작성하세요.
+            7. 사용자 질문에서 지역을 명시적으로 '시군구' 라고 하지 않으고 지역에 대한 질문을 한다면 기본적으론 '시도' 정보를 제공하세요.(특정 지역끼리의 비교는 제외)
+            8. 카드발행수량, 모바일 가입자수, 모바일 충전금액, 지류판매액, 지류회수액 데이터는 '한국조폐공사_지역사랑상품권_운영정보_전국' 테이블에 있다.
+            9. 결제건수, 결제금액, 카드사용금액, 모바일 이용자수, 모바일 사용금액 데이터는 '한국조폐공사_지역사랑상품권_결제정보_전국' 테이블에 있다.
+            10. 쿼리문에서 한글을 사용하는 경우 '``'(백틱)을 사용해서 쿼리문을 작성하세요.
+            11. 지역은 경기, 서울, 강원, 부산 등..과 같이 뒤에 시도 및 시군구 단어를 제외해서 쿼리문을 작성하세요.
+            12. 작성하는 쿼리문의 FROM에는 반드시 {catalog}.{schema}.`테이블명` 형식으로 작성하세요.
+            """
+
+            # 📌 테이블 정보 추가
+            full_prompt = f"{base_prompt.strip()}\n\n=== 테이블 및 컬럼 정보 ===\n{formatted_table_info}"
+
+            self.vn.set_initial_prompt(full_prompt)
+
+            print("[INFO] 메타데이터 학습이 완료되었습니다.")
 
         except Exception as e:
-            print(f"[ERROR] 모델 학습 중 오류 발생: {e}")
+            print(f"[ERROR] 메타데이터 학습 중 오류 발생: {e}")
 
 
-    def ask_question(self, user_question: str):
+
+    def ask_question(self, user_question: str, base_prompt: str = ""):
         """
         사용자의 질문을 처리하여 적합한 SQL을 생성하고 실행한 결과를 반환합니다.
 
@@ -310,7 +295,6 @@ class VannaModelManager:
         Returns:
             tuple: 생성된 SQL 쿼리와 실행 결과 DataFrame.
         """
-        print("[DEBUG] ask_question called with user_question:", repr(user_question))
 
         def normalize_string(s):
             """중복된 공백 제거 및 전체 소문자 변환"""
@@ -322,7 +306,6 @@ class VannaModelManager:
 
             # Step 1: 저장된 데이터에서 동일한 질문 찾기
             all_data = self.vn.sql_collection.get()
-            print("[DEBUG] All stored data from ChromaDB:", json.dumps(all_data, indent=4, ensure_ascii=False))
 
             if "documents" in all_data:
                 for idx, doc in enumerate(all_data["documents"]):
@@ -330,14 +313,10 @@ class VannaModelManager:
                         doc_data = json.loads(doc)
                         stored_question = doc_data.get("question", "")
                         stored_sql = doc_data.get("sql", "")
-                        print("[DEBUG] Original question:", user_question)
-                        print("[DEBUG] Normalized question:", normalize_string(user_question))
-                        print("[DEBUG] Stored question:", stored_question)
-                        print("[DEBUG] Normalized stored question:", normalize_string(stored_question))
 
                         if normalize_string(stored_question) == normalize_string(user_question):
                             print("[INFO] 학습된 질문과 동일한 질문이 감지되었습니다. 저장된 SQL을 반환하고 실행합니다.")
-                            
+
                             # 저장된 SQL 실행
                             df_result = self.vn.run_sql(stored_sql)
                             return stored_sql, df_result
@@ -354,32 +333,23 @@ class VannaModelManager:
             # Step 3: SQL 실행
             df_result = self.vn.run_sql(generated_sql)
 
-            print("[DEBUG] [LLM Generated SQL] =======")
-            print(generated_sql)
-            print(df_result)
-            print("===================================")
-
             return generated_sql, df_result
 
         except Exception as e:
             print(f"[ERROR] 질문 처리 중 오류 발생: {e}")
             return None, None
 
-        
     def debug_chromadb(self):
         try:
             print("[INFO] ChromaDB 디버깅 시작")
 
             # SQL 컬렉션 상태 확인
             sql_data = self.vn.sql_collection.get()
-            print("[DEBUG] SQL Collection 상태:")
-            print(json.dumps(sql_data, indent=4, ensure_ascii=False))
 
             if "documents" in sql_data and sql_data["documents"]:
                 for idx, doc in enumerate(sql_data["documents"]):
                     try:
                         parsed_doc = json.loads(doc)
-                        print(f"[DEBUG] Document {idx + 1}: {parsed_doc}")
                     except json.JSONDecodeError as e:
                         print(f"[WARN] Document {idx + 1} JSON 디코딩 실패: {e}")
 
@@ -389,4 +359,5 @@ class VannaModelManager:
             print("[INFO] ChromaDB 디버깅 완료")
         except Exception as e:
             print(f"[ERROR] ChromaDB 디버깅 중 오류 발생: {e}")
+
 
