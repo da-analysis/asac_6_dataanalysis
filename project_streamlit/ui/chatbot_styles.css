@@ -1,0 +1,49 @@
+        .block-container {
+            padding-top: 2rem;
+            padding-bottom: 0rem;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+        .container {
+            display: flex;
+        }
+        .scrollable-left {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .fixed-right {
+            flex: 2;
+            overflow-y: hidden;
+        }
+    div[data-testid="stJson"] {
+        font-family: "Pretendard";
+    }
+    span[class="string-value"] {
+        color: rgb(0 0 0);
+    }
+    .st-emotion-cache-1tquei4 {
+        font-family: "Pretendard";
+    }
+   div[data-baseweb="select"] {
+    font-family: "Pretendard";
+    background-color: rgb(255 255 255);
+   }
+    div[data-baseweb="base-input"] {
+        font-family: "Pretendard";
+        background-color: rgb(255 255 255);
+    }
+   div[data-baseweb="base-input"] input {
+        font-family: "Pretendard";
+        background-color: rgb(255 255 255);
+    }
+    .st-emotion-cache-1tquei4 h2 {
+        font-family: "Pretendard";
+    }
+    .st-emotion-cache-1tquei4 h3 {
+        font-family: "Pretendard";
+    }
+    .st-emotion-cache-1fy0zab {
+        font-family: "Pretendard";
+    }
+
+
