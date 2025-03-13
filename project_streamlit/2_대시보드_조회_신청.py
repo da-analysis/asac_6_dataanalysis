@@ -37,9 +37,10 @@ sheet_url = "https://docs.google.com/spreadsheets/d/1j0-AJF3og1k5L-lWnPUKHHTac8o
 sheet_name = "시트1"
 
 st.write('''
-        크롬, 엣지, 사파리 환경에서 진행하는 것을 추천드립니다. \n 
+        크롬, 엣지, 사파리 환경에서 진행하는 것을 추천드립니다. \n
         대시보드 조회 권한 부여를 위해 Databricks에 사용자 이메일, 이름 및 소속을 등록하는 과정입니다. \n
-        사용자 편의를 위해 거치는 과정으로, 입력된 정보는 대시보드 조회/실행 이외의 목적으로는 사용되지 않습니다.
+        사용자 편의를 위해 거치는 과정으로, 입력된 정보는 대시보드 조회/실행 이외의 목적으로는 사용되지 않습니다. \n
+        문의사항: admin@asacurrency.co.kr
         ''')
 
 st.divider()

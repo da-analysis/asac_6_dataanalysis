@@ -3,6 +3,7 @@ from vanna.base import VannaBase
 from vanna.chromadb.chromadb_vector import ChromaDB_VectorStore
 from openai import OpenAI
 from sqlalchemy import create_engine, text
+from sqlalchemy.pool import QueuePool
 import ssl
 import json
 import numpy as np
@@ -164,7 +165,12 @@ class VannaModelManager:
             url=(
                 f"databricks://token:{access_token}@{server_hostname}?"
                 f"http_path={http_path}&catalog={catalog}&schema={schema}"
-            )
+            ),
+            poolclass=QueuePool,
+            pool_size=5,  # 기본 연결 풀 크기
+            max_overflow=10,  # 추가로 생성 가능한 최대 연결 수
+            pool_timeout=30,  # 연결 대기 시간
+            pool_recycle=1800  # 30분마다 연결 재생성
         )
 
         # 모델 설정 및 학습
@@ -173,8 +179,25 @@ class VannaModelManager:
 
     def _setup_model(self):
         def run_sql(sql: str) -> pd.DataFrame:
-            df = pd.read_sql_query(sql=text(sql), con=self.engine.connect())
-            return df
+            print("\n[DEBUG] 데이터베이스 연결 시도...")
+            try:
+                with self.engine.connect() as connection:
+                    print("[DEBUG] 연결 성공!")
+
+                    # 연결 풀 상태 확인 방식 수정
+                    pool = self.engine.pool
+                    print(f"[DEBUG] 현재 연결 풀 상태:")
+                    print(f"- 총 연결 수: {pool.size()}")
+                    print(f"- 사용 가능한 연결 수: {pool.checkedin()}")
+                    print(f"- 사용 중인 연결 수: {pool.checkedout()}")
+
+                    df = pd.read_sql_query(sql=text(sql), con=connection)
+                    print("[DEBUG] SQL 쿼리 실행 완료")
+                    return df
+            except Exception as e:
+                print(f"[ERROR] SQL 실행 중 오류 발생: {e}")
+                print(f"[DEBUG] 오류 상세: {str(e)}")
+                raise
 
         self.vn.run_sql = run_sql
         self.vn.run_sql_is_set = True

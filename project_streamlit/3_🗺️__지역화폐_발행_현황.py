@@ -97,7 +97,7 @@ for _, row in gdf.iterrows():
 col1, col2 = st.columns(2, vertical_alignment="top")
 
 with col1:
-    st.markdown('🟩시도 지역화폐&nbsp;&nbsp;🟦시군구 지역화폐') 
+    st.markdown('🟩시도 지역화폐&nbsp;&nbsp;🟦시군구 지역화폐')
     st_folium(m, width=600, height=600)
 
 with col2:
